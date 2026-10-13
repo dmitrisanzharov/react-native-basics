@@ -1,24 +1,91 @@
-import * as Device from 'expo-device';
-import { Link, router } from 'expo-router';
-import { Platform, StyleSheet, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Haptics from 'expo-haptics';
+import { Link, router, useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
+import { Alert, Button, StyleSheet, TextInput, View } from 'react-native';
 // import { Button, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+const storageKey = 'inputKeyFromExpo';
+
 export default function Index() {
-    console.log('Platform', Platform);
-    console.log('Device', Device);
+    // console.log('Platform', Platform);
+    // console.log('Device', Device);
+    console.log('Haptics', Haptics);
+
+    const [input, setInput] = useState('');
 
     function handleRedirectToOtherTasks() {
         router.push('/other/other-task');
     }
+
+    useEffect(() => {
+        console.log('input', input);
+        console.log('AsyncStorage', AsyncStorage);
+
+        if (input?.length && input?.length > 5000) {
+            console.log('trigger alert');
+            Alert.alert('title', 'Second title');
+        }
+
+        async function setTheStorage() {
+            try {
+                await AsyncStorage.setItem(storageKey, input);
+                const value = await AsyncStorage.getItem(storageKey);
+                console.log('value: ', value);
+            } catch (error) {
+                console.log('error', error);
+            }
+        }
+
+        setTheStorage();
+
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+        return () => {
+            console.log('did NOT unmount, still mounted');
+        };
+    }, [input]);
+
+    async function handleDelete() {
+        await AsyncStorage.removeItem(storageKey);
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            return () => {
+                console.log('screen unfocused');
+            };
+        }, [])
+    );
 
     return (
         <SafeAreaProvider>
             <SafeAreaView style={{ flex: 1 }}>
                 <View>
                     <Link href='/about'>go to about</Link>
-                    <Link href='/tabs'>go to tabs</Link>
+                    <Link href='/(tabs)'>go to tabs</Link>
                 </View>
+
+                <View
+                    style={{
+                        height: 1,
+                        backgroundColor: 'black',
+                        marginVertical: 10
+                    }}
+                />
+
+                <TextInput style={{ border: '1px solid black' } as any} onChangeText={setInput} value={input} />
+
+                <View
+                    style={{
+                        height: 1,
+                        backgroundColor: 'black',
+                        marginVertical: 10
+                    }}
+                />
+
+                <Button title='delete storage' onPress={handleDelete} />
             </SafeAreaView>
         </SafeAreaProvider>
     );

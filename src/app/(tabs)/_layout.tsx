@@ -10,7 +10,7 @@ export default function RootLayout() {
                 options={{
                     title: 'tab one is open',
                     tabBarIcon: (options) => {
-                        console.log('options: ', options);
+                        // console.log('options: ', options);
                         return <Text>Tab One Omg</Text>;
                     }
                 }}

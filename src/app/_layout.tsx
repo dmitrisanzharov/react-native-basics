@@ -5,8 +5,8 @@ export default function RootLayout() {
         <Stack
             screenOptions={{ headerShown: true, headerStyle: { backgroundColor: 'red' }, headerTintColor: 'yellow' }}
         >
-            <Stack.Screen name='index' options={{ title: 'omg its index' }} />
-            <Stack.Screen name='about' options={{ title: 'about is lala land' }} />
+            {/* <Stack.Screen name='tabs/index' options={{ title: 'omg its index' }} /> */}
+            {/* <Stack.Screen name='about' options={{ title: 'about is lala land' }} /> */}
         </Stack>
     );
 }
