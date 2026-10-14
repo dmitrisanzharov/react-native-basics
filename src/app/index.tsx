@@ -2,8 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { Link, router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, Button, StyleSheet, TextInput, View } from 'react-native';
+import { Alert, Button, Share, StyleSheet, TextInput, View } from 'react-native';
 // import { Button, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const storageKey = 'inputKeyFromExpo';
@@ -59,6 +60,15 @@ export default function Index() {
         }, [])
     );
 
+    function handleShare() {
+        Share.share({ message: 'check this app out' });
+    }
+
+    async function handleClipBoard() {
+        console.log('Clipboard', Clipboard);
+        await Clipboard.setStringAsync('clipboard message as a string');
+    }
+
     return (
         <SafeAreaProvider>
             <SafeAreaView style={{ flex: 1 }}>
@@ -86,6 +96,26 @@ export default function Index() {
                 />
 
                 <Button title='delete storage' onPress={handleDelete} />
+
+                <View
+                    style={{
+                        height: 1,
+                        backgroundColor: 'black',
+                        marginVertical: 10
+                    }}
+                />
+
+                <Button title='share' onPress={handleShare} />
+
+                <View
+                    style={{
+                        height: 1,
+                        backgroundColor: 'black',
+                        marginVertical: 10
+                    }}
+                />
+
+                <Button title='clipboard message' onPress={handleClipBoard} />
             </SafeAreaView>
         </SafeAreaProvider>
     );
